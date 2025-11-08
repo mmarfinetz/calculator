@@ -360,14 +360,121 @@
             body {
                 background: white;
             }
-            
+
             .calculator-container {
                 box-shadow: none;
             }
-            
+
             .reset-button {
                 display: none;
             }
+        }
+
+        .setup-section {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #2196f3;
+        }
+
+        .setup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .setup-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1976d2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .setup-toggle {
+            font-size: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .setup-toggle.open {
+            transform: rotate(180deg);
+        }
+
+        .setup-content {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px dashed #2196f3;
+        }
+
+        .setup-content.show {
+            display: block;
+        }
+
+        .setup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .setup-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .setup-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1976d2;
+            text-transform: uppercase;
+        }
+
+        .setup-help {
+            font-size: 11px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .setup-input {
+            padding: 10px;
+            border: 2px solid #90caf9;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .setup-input:focus {
+            outline: none;
+            border-color: #2196f3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .payment-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .payment-toggle input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .payment-toggle label {
+            cursor: pointer;
+            font-weight: 600;
+            color: #333;
         }
     </style>
 </head>
@@ -377,8 +484,77 @@
             <h1>🔧 Easy Price Calculator</h1>
             <p>Marfinetz Plumbing Company</p>
         </div>
-        
+
         <div class="calculator-body">
+            <!-- Setup Section -->
+            <div class="setup-section">
+                <div class="setup-header" onclick="toggleSetup()">
+                    <div class="setup-title">
+                        <span>⚙️</span>
+                        <span>Monthly Model Parameters</span>
+                    </div>
+                    <span class="setup-toggle" id="setupToggle">▼</span>
+                </div>
+                <div class="setup-content" id="setupContent">
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">
+                        These parameters drive the base day-rate formula. Edit once per month, then quote all jobs using the calculated rates.
+                    </p>
+                    <div class="setup-grid">
+                        <div class="setup-item">
+                            <label class="setup-label">F - Fixed Costs</label>
+                            <div class="setup-help">Monthly fixed costs ($)</div>
+                            <input type="number" id="setupF" class="setup-input" value="7739" step="1" min="0" onchange="saveSetup()">
+                        </div>
+                        <div class="setup-item">
+                            <label class="setup-label">P - Target Profit</label>
+                            <div class="setup-help">Monthly profit goal ($)</div>
+                            <input type="number" id="setupP" class="setup-input" value="5000" step="100" min="0" onchange="saveSetup()">
+                        </div>
+                        <div class="setup-item">
+                            <label class="setup-label">D - Billable Days</label>
+                            <div class="setup-help">Expected crew-days/month</div>
+                            <input type="number" id="setupD" class="setup-input" value="20" step="1" min="1" onchange="saveSetup()">
+                        </div>
+                        <div class="setup-item">
+                            <label class="setup-label">S<sub>c</sub> - Safety Factor</label>
+                            <div class="setup-help">Capacity safety (0.0-1.0)</div>
+                            <input type="number" id="setupSc" class="setup-input" value="0.85" step="0.01" min="0.1" max="1.0" onchange="saveSetup()">
+                        </div>
+                        <div class="setup-item">
+                            <label class="setup-label">C<sub>b</sub> - Overhead Cushion</label>
+                            <div class="setup-help">Base rate cushion (0.10 = 10%)</div>
+                            <input type="number" id="setupCb" class="setup-input" value="0.10" step="0.01" min="0" onchange="saveSetup()">
+                        </div>
+                        <div class="setup-item">
+                            <label class="setup-label">C<sub>m</sub> - Materials Cushion</label>
+                            <div class="setup-help">Materials markup (0.15 = 15%)</div>
+                            <input type="number" id="setupCm" class="setup-input" value="0.15" step="0.01" min="0" onchange="saveSetup()">
+                        </div>
+                        <div class="setup-item">
+                            <label class="setup-label">f - Card Fee</label>
+                            <div class="setup-help">Payment fee (0.03 = 3%)</div>
+                            <input type="number" id="setupF_fee" class="setup-input" value="0.03" step="0.001" min="0" onchange="saveSetup()">
+                        </div>
+                        <div class="setup-item">
+                            <label class="setup-label">H<sub>day</sub> - Hours/Day</label>
+                            <div class="setup-help">Billable hours per day</div>
+                            <input type="number" id="setupHday" class="setup-input" value="7.5" step="0.5" min="1" onchange="saveSetup()">
+                        </div>
+                        <div class="setup-item">
+                            <label class="setup-label">Crew Size</label>
+                            <div class="setup-help">Default crew size</div>
+                            <input type="number" id="setupCrewSize" class="setup-input" value="2" step="1" min="1" onchange="saveSetup()">
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 8px; border: 2px solid #ffc107;">
+                        <div style="font-weight: 600; margin-bottom: 5px; color: #856404;">📊 Calculated Rates:</div>
+                        <div style="font-size: 14px; color: #856404;">
+                            <strong>B<sub>day</sub></strong> (base day-rate) = <span id="calcBday">$0</span> |
+                            <strong>B<sub>person-hour</sub></strong> = <span id="calcBpersonHour">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Hours Input -->
             <div class="input-section">
                 <div class="input-label">
@@ -427,7 +603,7 @@
                     <span class="step-number">2</span>
                     Cost of materials/parts?
                 </div>
-                <div class="input-help">What you paid for parts (we'll mark it up automatically)</div>
+                <div class="input-help">What you paid for parts (we'll add cushion automatically)</div>
                 <div class="input-wrapper">
                     <span class="input-icon">💵</span>
                     <input type="number" id="materials" placeholder="0" step="10" min="0">
@@ -440,35 +616,16 @@
                     <button class="quick-btn" onclick="setMaterials(500)">$500</button>
                 </div>
             </div>
-            
-            <!-- Profit Adjustment -->
-            <div class="input-section" style="background: #fff8e1; border: 2px dashed #ffc107;">
+
+            <!-- Payment Method -->
+            <div class="input-section">
                 <div class="input-label">
-                    <span class="step-number" style="background: #ffc107;">⚙️</span>
-                    Adjust Profit Margin (Optional)
+                    <span class="step-number">3</span>
+                    Payment Method
                 </div>
-                <div class="input-help">Default is 20% - adjust if quote seems too high/low</div>
-                <div class="profit-slider-container" style="margin-left: 40px; margin-top: 15px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                        <span style="font-size: 12px; color: #666;">Low Margin</span>
-                        <span style="font-size: 18px; font-weight: bold; color: #ffc107;" id="profitDisplay">20%</span>
-                        <span style="font-size: 12px; color: #666;">High Margin</span>
-                    </div>
-                    <input type="range" id="profitSlider" min="10" max="30" value="20" step="5" 
-                           style="width: 100%; cursor: pointer;"
-                           oninput="updateProfitDisplay(this.value)">
-                    <div style="display: flex; justify-content: space-between; margin-top: 5px;">
-                        <span style="font-size: 11px; color: #999;">10%</span>
-                        <span style="font-size: 11px; color: #999;">15%</span>
-                        <span style="font-size: 11px; color: #999;">20%</span>
-                        <span style="font-size: 11px; color: #999;">25%</span>
-                        <span style="font-size: 11px; color: #999;">30%</span>
-                    </div>
-                </div>
-                <div class="quick-buttons" style="margin-top: 15px;">
-                    <button class="quick-btn" onclick="setProfit(10)" style="background: #e8f5e9; color: #4caf50;">Budget Job (10%)</button>
-                    <button class="quick-btn" onclick="setProfit(20)" style="background: #e3f2fd; color: #2196f3;">Standard (20%)</button>
-                    <button class="quick-btn" onclick="setProfit(30)" style="background: #fce4ec; color: #e91e63;">Premium Job (30%)</button>
+                <div class="payment-toggle">
+                    <input type="checkbox" id="payByCard" onchange="calculatePrice()">
+                    <label for="payByCard">💳 Customer paying by card (adds processing fee)</label>
                 </div>
             </div>
             
@@ -480,20 +637,24 @@
                 
                 <div class="breakdown" id="breakdown">
                     <div class="breakdown-item">
-                        <span class="breakdown-label">Labor (includes taxes & insurance)</span>
+                        <span class="breakdown-label">Job effort</span>
+                        <span class="breakdown-value" id="jobEffort">—</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Labor (base rate × effort)</span>
                         <span class="breakdown-value" id="laborCost">$0</span>
                     </div>
                     <div class="breakdown-item">
-                        <span class="breakdown-label">Materials (1.5x markup)</span>
+                        <span class="breakdown-label">Materials (cost + <span id="cmPercent">15</span>% cushion)</span>
                         <span class="breakdown-value" id="materialsCost">$0</span>
                     </div>
                     <div class="breakdown-item">
-                        <span class="breakdown-label">Overhead (25%)</span>
-                        <span class="breakdown-value" id="overheadCost">$0</span>
+                        <span class="breakdown-label">Subtotal (before fees)</span>
+                        <span class="breakdown-value" id="subtotalAmount">$0</span>
                     </div>
-                    <div class="breakdown-item">
-                        <span class="breakdown-label">Profit (<span id="profitPercent">20</span>%)</span>
-                        <span class="breakdown-value" id="profitAmount">$0</span>
+                    <div class="breakdown-item" id="cardFeeRow" style="display: none;">
+                        <span class="breakdown-label">Card processing fee (<span id="feePercent">3</span>%)</span>
+                        <span class="breakdown-value" id="cardFeeAmount">$0</span>
                     </div>
                 </div>
                 
@@ -516,20 +677,80 @@
     </div>
     
     <script>
-        // Constants based on the whiteboard
-        const HOURLY_RATE = 60;
-        const LABOR_MULTIPLIER = 1.5; // Covers taxes, insurance, benefits
-        const MATERIALS_MARKUP = 1.5; // 1.5x material cost
-        const OVERHEAD_RATE = 0.25; // 25% for overhead
-        let PROFIT_RATE = 0.20; // 20% profit margin (now adjustable)
-        const MINIMUM_CHARGE = 250; // Minimum service call
-        
+        // Whiteboard pricing model implementation
+        const MINIMUM_CHARGE = 250;
+
+        // Load setup from localStorage or use defaults
+        function loadSetup() {
+            const saved = localStorage.getItem('pricingModelSetup');
+            if (saved) {
+                const params = JSON.parse(saved);
+                document.getElementById('setupF').value = params.F;
+                document.getElementById('setupP').value = params.P;
+                document.getElementById('setupD').value = params.D;
+                document.getElementById('setupSc').value = params.Sc;
+                document.getElementById('setupCb').value = params.Cb;
+                document.getElementById('setupCm').value = params.Cm;
+                document.getElementById('setupF_fee').value = params.f;
+                document.getElementById('setupHday').value = params.Hday;
+                document.getElementById('setupCrewSize').value = params.crewSize;
+            }
+            updateCalculatedRates();
+        }
+
+        // Save setup to localStorage
+        function saveSetup() {
+            const params = getSetupParams();
+            localStorage.setItem('pricingModelSetup', JSON.stringify(params));
+            updateCalculatedRates();
+            calculatePrice();
+        }
+
+        // Get current setup parameters
+        function getSetupParams() {
+            return {
+                F: parseFloat(document.getElementById('setupF').value) || 7739,
+                P: parseFloat(document.getElementById('setupP').value) || 5000,
+                D: parseFloat(document.getElementById('setupD').value) || 20,
+                Sc: parseFloat(document.getElementById('setupSc').value) || 0.85,
+                Cb: parseFloat(document.getElementById('setupCb').value) || 0.10,
+                Cm: parseFloat(document.getElementById('setupCm').value) || 0.15,
+                f: parseFloat(document.getElementById('setupF_fee').value) || 0.03,
+                Hday: parseFloat(document.getElementById('setupHday').value) || 7.5,
+                crewSize: parseFloat(document.getElementById('setupCrewSize').value) || 2
+            };
+        }
+
+        // Calculate and display B_day and B_personHour
+        function updateCalculatedRates() {
+            const params = getSetupParams();
+            const Bday = (1 + params.Cb) * (params.F + params.P) / (params.Sc * params.D);
+            const BpersonHour = Bday / (params.Hday * params.crewSize);
+
+            document.getElementById('calcBday').textContent = `$${Bday.toFixed(2)}`;
+            document.getElementById('calcBpersonHour').textContent = `$${BpersonHour.toFixed(2)}`;
+        }
+
+        // Toggle setup section
+        function toggleSetup() {
+            const content = document.getElementById('setupContent');
+            const toggle = document.getElementById('setupToggle');
+
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                toggle.classList.remove('open');
+            } else {
+                content.classList.add('show');
+                toggle.classList.add('open');
+            }
+        }
+
         // Toggle multi-day input
         function toggleMultiDay() {
             const isChecked = document.getElementById('multiDay').checked;
             const multiDayInput = document.getElementById('multiDayInput');
             const hoursInput = document.getElementById('hours');
-            
+
             if (isChecked) {
                 multiDayInput.style.display = 'block';
                 hoursInput.disabled = true;
@@ -542,41 +763,29 @@
                 calculatePrice();
             }
         }
-        
+
         // Calculate hours for multi-day jobs
         function calculateMultiDayHours() {
+            const params = getSetupParams();
             const crewSize = parseFloat(document.getElementById('crewSize').value) || 1;
             const days = parseFloat(document.getElementById('days').value) || 1;
-            const totalHours = crewSize * days * 8; // 8 hours per day
+            const totalHours = crewSize * days * params.Hday;
             document.getElementById('hours').value = totalHours;
             calculatePrice();
         }
-        
+
         // Set multi-day preset
         function setMultiDay(crew, days) {
             document.getElementById('crewSize').value = crew;
             document.getElementById('days').value = days;
             calculateMultiDayHours();
         }
-        
-        // Update profit display
-        function updateProfitDisplay(value) {
-            document.getElementById('profitDisplay').textContent = value + '%';
-            PROFIT_RATE = value / 100;
-            calculatePrice();
-        }
-        
-        // Set profit preset
-        function setProfit(percentage) {
-            document.getElementById('profitSlider').value = percentage;
-            updateProfitDisplay(percentage);
-        }
-        
+
         // Toggle breakdown visibility
         function toggleBreakdown() {
             const breakdown = document.getElementById('breakdown');
             const button = document.getElementById('breakdownBtn');
-            
+
             if (breakdown.classList.contains('show')) {
                 breakdown.classList.remove('show');
                 button.classList.remove('active');
@@ -587,69 +796,108 @@
                 button.innerHTML = '📊 Hide Detailed Breakdown';
             }
         }
-        
+
         // Quick set functions
         function setHours(value) {
             document.getElementById('hours').value = value;
             calculatePrice();
         }
-        
+
         function setMaterials(value) {
             document.getElementById('materials').value = value;
             calculatePrice();
         }
-        
-        // Main calculation function
+
+        // Main calculation function using whiteboard model
         function calculatePrice() {
             const hours = parseFloat(document.getElementById('hours').value) || 0;
             const materialsCost = parseFloat(document.getElementById('materials').value) || 0;
-            
+            const payByCard = document.getElementById('payByCard').checked;
+
             if (hours === 0 && materialsCost === 0) {
                 document.getElementById('results').style.display = 'none';
                 return;
             }
-            
-            // Calculate components
-            const laborCost = hours * HOURLY_RATE * LABOR_MULTIPLIER;
-            const materialsMarkedUp = materialsCost * MATERIALS_MARKUP;
-            const subtotal = laborCost + materialsMarkedUp;
-            const overhead = subtotal * OVERHEAD_RATE;
-            const profitAmount = (subtotal + overhead) * PROFIT_RATE;
-            let finalPrice = subtotal + overhead + profitAmount;
-            
+
+            const params = getSetupParams();
+
+            // Calculate base rates using whiteboard formula
+            // B_day = (1 + C_b)(F + P) / (S_c * D)
+            const Bday = (1 + params.Cb) * (params.F + params.P) / (params.Sc * params.D);
+            const BpersonHour = Bday / (params.Hday * params.crewSize);
+
+            // Determine if we're using multi-day mode
+            const isMultiDay = document.getElementById('multiDay').checked;
+            let labor, jobEffortText;
+
+            if (isMultiDay) {
+                const crewSize = parseFloat(document.getElementById('crewSize').value) || 1;
+                const days = parseFloat(document.getElementById('days').value) || 1;
+                const crewDays = crewSize * days;
+                labor = crewDays * Bday;
+                jobEffortText = `${crewSize} × ${days} days = ${crewDays.toFixed(1)} crew-days`;
+            } else {
+                // Convert hours to person-hours based on setup crew size
+                const personHours = hours;
+                labor = personHours * BpersonHour;
+                jobEffortText = `${hours} person-hours`;
+            }
+
+            // Materials with cushion: (1 + C_m) * M
+            const materialsWithCushion = (1 + params.Cm) * materialsCost;
+
+            // Subtotal
+            const subtotal = labor + materialsWithCushion;
+
+            // Apply card fee if selected: total = subtotal / (1 - f)
+            let finalPrice = payByCard ? subtotal / (1 - params.f) : subtotal;
+            const cardFee = payByCard ? (finalPrice - subtotal) : 0;
+
             // Apply minimum charge
             const belowMinimum = finalPrice < MINIMUM_CHARGE && finalPrice > 0;
             if (belowMinimum) {
                 finalPrice = MINIMUM_CHARGE;
             }
-            
+
+            // Round to nearest $10
+            finalPrice = Math.round(finalPrice / 10) * 10;
+
             // Update display
-            document.getElementById('laborCost').textContent = `$${laborCost.toFixed(0)}`;
-            document.getElementById('materialsCost').textContent = `$${materialsMarkedUp.toFixed(0)}`;
-            document.getElementById('overheadCost').textContent = `$${overhead.toFixed(0)}`;
-            document.getElementById('profitAmount').textContent = `$${profitAmount.toFixed(0)}`;
-            document.getElementById('profitPercent').textContent = (PROFIT_RATE * 100).toFixed(0);
+            document.getElementById('jobEffort').textContent = jobEffortText;
+            document.getElementById('laborCost').textContent = `$${labor.toFixed(0)}`;
+            document.getElementById('materialsCost').textContent = `$${materialsWithCushion.toFixed(0)}`;
+            document.getElementById('cmPercent').textContent = (params.Cm * 100).toFixed(0);
+            document.getElementById('subtotalAmount').textContent = `$${subtotal.toFixed(0)}`;
+
+            // Card fee row
+            const cardFeeRow = document.getElementById('cardFeeRow');
+            if (payByCard) {
+                cardFeeRow.style.display = 'flex';
+                document.getElementById('cardFeeAmount').textContent = `$${cardFee.toFixed(0)}`;
+                document.getElementById('feePercent').textContent = (params.f * 100).toFixed(1);
+            } else {
+                cardFeeRow.style.display = 'none';
+            }
+
             document.getElementById('finalPrice').textContent = `$${finalPrice.toFixed(0)}`;
-            
+
             // Show/hide minimum warning
             document.getElementById('minimumWarning').style.display = belowMinimum ? 'flex' : 'none';
-            
+
             // Show results
             document.getElementById('results').style.display = 'block';
         }
-        
+
         // Reset function
         function resetCalculator() {
             document.getElementById('hours').value = '';
             document.getElementById('materials').value = '';
+            document.getElementById('payByCard').checked = false;
             document.getElementById('results').style.display = 'none';
             // Reset breakdown visibility
             document.getElementById('breakdown').classList.remove('show');
             document.getElementById('breakdownBtn').classList.remove('active');
             document.getElementById('breakdownBtn').innerHTML = '📊 Show Detailed Breakdown';
-            // Reset profit to default
-            document.getElementById('profitSlider').value = 20;
-            updateProfitDisplay(20);
             // Reset multi-day
             document.getElementById('multiDay').checked = false;
             document.getElementById('multiDayInput').style.display = 'none';
@@ -658,20 +906,25 @@
             document.getElementById('crewSize').value = 1;
             document.getElementById('days').value = 1;
         }
-        
-        // Add event listeners
-        document.getElementById('hours').addEventListener('input', calculatePrice);
-        document.getElementById('materials').addEventListener('input', calculatePrice);
-        document.getElementById('crewSize').addEventListener('input', calculateMultiDayHours);
-        document.getElementById('days').addEventListener('input', calculateMultiDayHours);
-        
-        // Prevent negative numbers
-        document.getElementById('hours').addEventListener('change', function() {
-            if (this.value < 0) this.value = 0;
-        });
-        
-        document.getElementById('materials').addEventListener('change', function() {
-            if (this.value < 0) this.value = 0;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSetup();
+
+            // Add event listeners
+            document.getElementById('hours').addEventListener('input', calculatePrice);
+            document.getElementById('materials').addEventListener('input', calculatePrice);
+            document.getElementById('crewSize').addEventListener('input', calculateMultiDayHours);
+            document.getElementById('days').addEventListener('input', calculateMultiDayHours);
+
+            // Prevent negative numbers
+            document.getElementById('hours').addEventListener('change', function() {
+                if (this.value < 0) this.value = 0;
+            });
+
+            document.getElementById('materials').addEventListener('change', function() {
+                if (this.value < 0) this.value = 0;
+            });
         });
     </script>
 </body>
