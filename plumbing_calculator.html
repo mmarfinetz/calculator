@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Plumbing Price Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .calculator-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .calculator-body {
+            padding: 30px;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .input-section:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .input-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-help {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+            margin-left: 40px;
+            font-style: italic;
+        }
+        
+        .input-wrapper {
+            position: relative;
+            margin-left: 40px;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            font-size: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .quick-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            margin-left: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .quick-btn {
+            padding: 8px 16px;
+            background: #e8eaf6;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        .quick-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .results-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+            margin-top: 30px;
+        }
+        
+        .breakdown {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            display: none;
+        }
+        
+        .breakdown.show {
+            display: block;
+        }
+        
+        .show-breakdown-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .show-breakdown-btn:hover {
+            background: white;
+            color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+        }
+        
+        .show-breakdown-btn.active {
+            background: white;
+            color: #667eea;
+        }
+        
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .breakdown-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .breakdown-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .breakdown-value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .final-price {
+            background: white;
+            color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .final-price-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .final-price-amount {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            line-height: 1;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .warning-icon {
+            font-size: 24px;
+        }
+        
+        .reset-button {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .reset-button:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+        
+        /* Slider Styles */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        
+        input[type="range"]::-webkit-slider-track {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+        }
+        
+        input[type="range"]::-moz-range-track {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 4px;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #ffc107;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            margin-top: -8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            appearance: none;
+            background: #ffc107;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        input[type="range"]:hover::-webkit-slider-thumb {
+            background: #ffb300;
+            transform: scale(1.1);
+        }
+        
+        input[type="range"]:hover::-moz-range-thumb {
+            background: #ffb300;
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .final-price-amount {
+                font-size: 36px;
+            }
+            
+            .quick-buttons {
+                margin-left: 0;
+            }
+            
+            .input-wrapper {
+                margin-left: 0;
+            }
+            
+            .input-help {
+                margin-left: 0;
+            }
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .calculator-container {
+                box-shadow: none;
+            }
+            
+            .reset-button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="header">
+            <h1>🔧 Easy Price Calculator</h1>
+            <p>Just fill in the boxes - we'll do the math!</p>
+        </div>
+        
+        <div class="calculator-body">
+            <!-- Hours Input -->
+            <div class="input-section">
+                <div class="input-label">
+                    <span class="step-number">1</span>
+                    How many hours will the job take?
+                </div>
+                <div class="input-help">Include travel time and setup</div>
+                <div class="input-wrapper">
+                    <span class="input-icon">⏱️</span>
+                    <input type="number" id="hours" placeholder="0" step="0.5" min="0">
+                </div>
+                <div class="quick-buttons">
+                    <button class="quick-btn" onclick="setHours(0.5)">30 min</button>
+                    <button class="quick-btn" onclick="setHours(1)">1 hour</button>
+                    <button class="quick-btn" onclick="setHours(2)">2 hours</button>
+                    <button class="quick-btn" onclick="setHours(4)">Half day</button>
+                    <button class="quick-btn" onclick="setHours(8)">Full day</button>
+                </div>
+                <!-- Multi-day toggle -->
+                <div style="margin-top: 15px; margin-left: 40px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" id="multiDay" onchange="toggleMultiDay()" style="width: 20px; height: 20px;">
+                        <span style="font-weight: 600; color: #667eea;">📅 This is a multi-day job</span>
+                    </label>
+                </div>
+                <div id="multiDayInput" style="display: none; margin-top: 15px; margin-left: 40px; padding: 15px; background: #e8eaf6; border-radius: 10px;">
+                    <div style="margin-bottom: 10px;">
+                        <label style="font-size: 14px; color: #666; display: block; margin-bottom: 5px;">Number of crew members:</label>
+                        <input type="number" id="crewSize" placeholder="1" value="1" min="1" step="1" style="width: 100%; padding: 10px; font-size: 16px; border: 2px solid #e0e0e0; border-radius: 5px;">
+                    </div>
+                    <div>
+                        <label style="font-size: 14px; color: #666; display: block; margin-bottom: 5px;">Number of days:</label>
+                        <input type="number" id="days" placeholder="1" value="1" min="1" step="0.5" style="width: 100%; padding: 10px; font-size: 16px; border: 2px solid #e0e0e0; border-radius: 5px;">
+                    </div>
+                    <div class="quick-buttons" style="margin-top: 10px;">
+                        <button class="quick-btn" onclick="setMultiDay(1, 2)">1 person, 2 days</button>
+                        <button class="quick-btn" onclick="setMultiDay(2, 2)">2 crew, 2 days</button>
+                        <button class="quick-btn" onclick="setMultiDay(2, 3)">2 crew, 3 days</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Materials Input -->
+            <div class="input-section">
+                <div class="input-label">
+                    <span class="step-number">2</span>
+                    Cost of materials/parts?
+                </div>
+                <div class="input-help">What you paid for parts (we'll mark it up automatically)</div>
+                <div class="input-wrapper">
+                    <span class="input-icon">💵</span>
+                    <input type="number" id="materials" placeholder="0" step="10" min="0">
+                </div>
+                <div class="quick-buttons">
+                    <button class="quick-btn" onclick="setMaterials(25)">$25</button>
+                    <button class="quick-btn" onclick="setMaterials(50)">$50</button>
+                    <button class="quick-btn" onclick="setMaterials(100)">$100</button>
+                    <button class="quick-btn" onclick="setMaterials(200)">$200</button>
+                    <button class="quick-btn" onclick="setMaterials(500)">$500</button>
+                </div>
+            </div>
+            
+            <!-- Profit Adjustment -->
+            <div class="input-section" style="background: #fff8e1; border: 2px dashed #ffc107;">
+                <div class="input-label">
+                    <span class="step-number" style="background: #ffc107;">⚙️</span>
+                    Adjust Profit Margin (Optional)
+                </div>
+                <div class="input-help">Default is 20% - adjust if quote seems too high/low</div>
+                <div class="profit-slider-container" style="margin-left: 40px; margin-top: 15px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span style="font-size: 12px; color: #666;">Low Margin</span>
+                        <span style="font-size: 18px; font-weight: bold; color: #ffc107;" id="profitDisplay">20%</span>
+                        <span style="font-size: 12px; color: #666;">High Margin</span>
+                    </div>
+                    <input type="range" id="profitSlider" min="10" max="30" value="20" step="5" 
+                           style="width: 100%; cursor: pointer;"
+                           oninput="updateProfitDisplay(this.value)">
+                    <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                        <span style="font-size: 11px; color: #999;">10%</span>
+                        <span style="font-size: 11px; color: #999;">15%</span>
+                        <span style="font-size: 11px; color: #999;">20%</span>
+                        <span style="font-size: 11px; color: #999;">25%</span>
+                        <span style="font-size: 11px; color: #999;">30%</span>
+                    </div>
+                </div>
+                <div class="quick-buttons" style="margin-top: 15px;">
+                    <button class="quick-btn" onclick="setProfit(10)" style="background: #e8f5e9; color: #4caf50;">Budget Job (10%)</button>
+                    <button class="quick-btn" onclick="setProfit(20)" style="background: #e3f2fd; color: #2196f3;">Standard (20%)</button>
+                    <button class="quick-btn" onclick="setProfit(30)" style="background: #fce4ec; color: #e91e63;">Premium Job (30%)</button>
+                </div>
+            </div>
+            
+            <!-- Results -->
+            <div class="results-section" id="results" style="display: none;">
+                <button class="show-breakdown-btn" id="breakdownBtn" onclick="toggleBreakdown()">
+                    📊 Show Detailed Breakdown
+                </button>
+                
+                <div class="breakdown" id="breakdown">
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Labor (includes taxes & insurance)</span>
+                        <span class="breakdown-value" id="laborCost">$0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Materials (1.5x markup)</span>
+                        <span class="breakdown-value" id="materialsCost">$0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Overhead (25%)</span>
+                        <span class="breakdown-value" id="overheadCost">$0</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Profit (<span id="profitPercent">20</span>%)</span>
+                        <span class="breakdown-value" id="profitAmount">$0</span>
+                    </div>
+                </div>
+                
+                <div class="final-price">
+                    <div class="final-price-label">Quote This Price</div>
+                    <div class="final-price-amount" id="finalPrice">$0</div>
+                </div>
+                
+                <div class="warning" id="minimumWarning">
+                    <span class="warning-icon">⚠️</span>
+                    <div>
+                        <strong>Price adjusted to $250 minimum</strong><br>
+                        <small>All jobs must be at least $250 to cover business costs</small>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="reset-button" onclick="resetCalculator()">Clear & Start Over</button>
+        </div>
+    </div>
+    
+    <script>
+        // Constants based on the whiteboard
+        const HOURLY_RATE = 60;
+        const LABOR_MULTIPLIER = 1.5; // Covers taxes, insurance, benefits
+        const MATERIALS_MARKUP = 1.5; // 1.5x material cost
+        const OVERHEAD_RATE = 0.25; // 25% for overhead
+        let PROFIT_RATE = 0.20; // 20% profit margin (now adjustable)
+        const MINIMUM_CHARGE = 250; // Minimum service call
+        
+        // Toggle multi-day input
+        function toggleMultiDay() {
+            const isChecked = document.getElementById('multiDay').checked;
+            const multiDayInput = document.getElementById('multiDayInput');
+            const hoursInput = document.getElementById('hours');
+            
+            if (isChecked) {
+                multiDayInput.style.display = 'block';
+                hoursInput.disabled = true;
+                hoursInput.style.opacity = '0.5';
+                calculateMultiDayHours();
+            } else {
+                multiDayInput.style.display = 'none';
+                hoursInput.disabled = false;
+                hoursInput.style.opacity = '1';
+                calculatePrice();
+            }
+        }
+        
+        // Calculate hours for multi-day jobs
+        function calculateMultiDayHours() {
+            const crewSize = parseFloat(document.getElementById('crewSize').value) || 1;
+            const days = parseFloat(document.getElementById('days').value) || 1;
+            const totalHours = crewSize * days * 8; // 8 hours per day
+            document.getElementById('hours').value = totalHours;
+            calculatePrice();
+        }
+        
+        // Set multi-day preset
+        function setMultiDay(crew, days) {
+            document.getElementById('crewSize').value = crew;
+            document.getElementById('days').value = days;
+            calculateMultiDayHours();
+        }
+        
+        // Update profit display
+        function updateProfitDisplay(value) {
+            document.getElementById('profitDisplay').textContent = value + '%';
+            PROFIT_RATE = value / 100;
+            calculatePrice();
+        }
+        
+        // Set profit preset
+        function setProfit(percentage) {
+            document.getElementById('profitSlider').value = percentage;
+            updateProfitDisplay(percentage);
+        }
+        
+        // Toggle breakdown visibility
+        function toggleBreakdown() {
+            const breakdown = document.getElementById('breakdown');
+            const button = document.getElementById('breakdownBtn');
+            
+            if (breakdown.classList.contains('show')) {
+                breakdown.classList.remove('show');
+                button.classList.remove('active');
+                button.innerHTML = '📊 Show Detailed Breakdown';
+            } else {
+                breakdown.classList.add('show');
+                button.classList.add('active');
+                button.innerHTML = '📊 Hide Detailed Breakdown';
+            }
+        }
+        
+        // Quick set functions
+        function setHours(value) {
+            document.getElementById('hours').value = value;
+            calculatePrice();
+        }
+        
+        function setMaterials(value) {
+            document.getElementById('materials').value = value;
+            calculatePrice();
+        }
+        
+        // Main calculation function
+        function calculatePrice() {
+            const hours = parseFloat(document.getElementById('hours').value) || 0;
+            const materialsCost = parseFloat(document.getElementById('materials').value) || 0;
+            
+            if (hours === 0 && materialsCost === 0) {
+                document.getElementById('results').style.display = 'none';
+                return;
+            }
+            
+            // Calculate components
+            const laborCost = hours * HOURLY_RATE * LABOR_MULTIPLIER;
+            const materialsMarkedUp = materialsCost * MATERIALS_MARKUP;
+            const subtotal = laborCost + materialsMarkedUp;
+            const overhead = subtotal * OVERHEAD_RATE;
+            const profitAmount = (subtotal + overhead) * PROFIT_RATE;
+            let finalPrice = subtotal + overhead + profitAmount;
+            
+            // Apply minimum charge
+            const belowMinimum = finalPrice < MINIMUM_CHARGE && finalPrice > 0;
+            if (belowMinimum) {
+                finalPrice = MINIMUM_CHARGE;
+            }
+            
+            // Update display
+            document.getElementById('laborCost').textContent = `$${laborCost.toFixed(0)}`;
+            document.getElementById('materialsCost').textContent = `$${materialsMarkedUp.toFixed(0)}`;
+            document.getElementById('overheadCost').textContent = `$${overhead.toFixed(0)}`;
+            document.getElementById('profitAmount').textContent = `$${profitAmount.toFixed(0)}`;
+            document.getElementById('profitPercent').textContent = (PROFIT_RATE * 100).toFixed(0);
+            document.getElementById('finalPrice').textContent = `$${finalPrice.toFixed(0)}`;
+            
+            // Show/hide minimum warning
+            document.getElementById('minimumWarning').style.display = belowMinimum ? 'flex' : 'none';
+            
+            // Show results
+            document.getElementById('results').style.display = 'block';
+        }
+        
+        // Reset function
+        function resetCalculator() {
+            document.getElementById('hours').value = '';
+            document.getElementById('materials').value = '';
+            document.getElementById('results').style.display = 'none';
+            // Reset breakdown visibility
+            document.getElementById('breakdown').classList.remove('show');
+            document.getElementById('breakdownBtn').classList.remove('active');
+            document.getElementById('breakdownBtn').innerHTML = '📊 Show Detailed Breakdown';
+            // Reset profit to default
+            document.getElementById('profitSlider').value = 20;
+            updateProfitDisplay(20);
+            // Reset multi-day
+            document.getElementById('multiDay').checked = false;
+            document.getElementById('multiDayInput').style.display = 'none';
+            document.getElementById('hours').disabled = false;
+            document.getElementById('hours').style.opacity = '1';
+            document.getElementById('crewSize').value = 1;
+            document.getElementById('days').value = 1;
+        }
+        
+        // Add event listeners
+        document.getElementById('hours').addEventListener('input', calculatePrice);
+        document.getElementById('materials').addEventListener('input', calculatePrice);
+        document.getElementById('crewSize').addEventListener('input', calculateMultiDayHours);
+        document.getElementById('days').addEventListener('input', calculateMultiDayHours);
+        
+        // Prevent negative numbers
+        document.getElementById('hours').addEventListener('change', function() {
+            if (this.value < 0) this.value = 0;
+        });
+        
+        document.getElementById('materials').addEventListener('change', function() {
+            if (this.value < 0) this.value = 0;
+        });
+    </script>
+</body>
+</html>
