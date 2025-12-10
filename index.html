@@ -712,6 +712,18 @@
                         <input type="number" id="pipeFeet" step="1" min="0" placeholder="Enter feet of pipe">
                     </div>
                     <div class="pipe-input-group">
+                        <label for="pipeMaterialCost">Material Cost per Foot ($):</label>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <input type="number" id="pipeMaterialCost" step="1" min="0" value="12" placeholder="12" style="flex: 1;">
+                            <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+                                <button class="quick-btn" onclick="document.getElementById('pipeMaterialCost').value=8" style="padding: 6px 10px; font-size: 12px;">$8</button>
+                                <button class="quick-btn" onclick="document.getElementById('pipeMaterialCost').value=12" style="padding: 6px 10px; font-size: 12px;">$12</button>
+                                <button class="quick-btn" onclick="document.getElementById('pipeMaterialCost').value=18" style="padding: 6px 10px; font-size: 12px;">$18</button>
+                                <button class="quick-btn" onclick="document.getElementById('pipeMaterialCost').value=25" style="padding: 6px 10px; font-size: 12px;">$25</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pipe-input-group">
                         <label>Difficulty Level:</label>
                         <div class="difficulty-grid">
                             <button class="difficulty-btn easy" onclick="calculatePipeJob(0.25, 'Easy')">
@@ -733,7 +745,7 @@
                         </div>
                     </div>
                     <div class="pipe-note">
-                        <strong>Note:</strong> Per-foot pricing includes $319 minimum base + materials (~$12/ft for 2" drain pipe). Click a difficulty to auto-fill the calculator below.
+                        <strong>Note:</strong> Per-foot pricing includes $319 minimum base + materials. Adjust $/ft above for different pipe types (2" PVC ~$12, copper ~$25).
                     </div>
                 </div>
             </div>
@@ -812,8 +824,12 @@
                         <span class="breakdown-value" id="cardFeeAmount">$0</span>
                     </div>
                     <div class="breakdown-item profit-item">
-                        <span class="breakdown-label">Expected Profit</span>
+                        <span class="breakdown-label">Expected Profit (target)</span>
                         <span class="breakdown-value" id="profitAmount">$0</span>
+                    </div>
+                    <div class="breakdown-item" style="background: rgba(33, 150, 243, 0.3); padding: 12px; border-radius: 8px; margin-top: 10px;">
+                        <span class="breakdown-label" style="color: #90caf9;">True Margin (incl. cushions)</span>
+                        <span class="breakdown-value" style="color: #90caf9;" id="trueMarginAmount">$0</span>
                     </div>
                 </div>
 
@@ -1010,7 +1026,7 @@
             const params = getSetupParams();
             const totalHours = feet * hoursPerFoot;
             const totalDays = totalHours / params.Hday;
-            const materialsPerFoot = 12; // ~$12/ft for 2" PVC
+            const materialsPerFoot = parseFloat(document.getElementById('pipeMaterialCost').value) || 12;
             const totalMaterials = feet * materialsPerFoot;
 
             // Ensure minimum
@@ -1106,6 +1122,13 @@
             const jobProfit = billableDays * profitPerDay;
             const profitPercent = (jobProfit / finalPrice * 100).toFixed(1);
 
+            // Calculate TRUE margin (including cushions)
+            // True operating cost = F / (Sc * D) per day + raw materials + card fee
+            const fixedCostPerDay = params.F / (params.Sc * params.D);
+            const trueOperatingCost = (billableDays * fixedCostPerDay) + materialsCost + cardFee;
+            const trueProfit = finalPrice - trueOperatingCost;
+            const trueMarginPercent = (trueProfit / finalPrice * 100).toFixed(1);
+
             // Update display
             const jobEffortText = timeType === 'hours'
                 ? `${displayHours} hrs = ${billableDays.toFixed(2)} days`
@@ -1117,6 +1140,7 @@
             document.getElementById('subtotalAmount').textContent = `$${subtotal.toFixed(0)}`;
             document.getElementById('cardFeeAmount').textContent = `$${cardFee.toFixed(0)}`;
             document.getElementById('profitAmount').textContent = `$${jobProfit.toFixed(0)} (${profitPercent}%)`;
+            document.getElementById('trueMarginAmount').textContent = `$${trueProfit.toFixed(0)} (${trueMarginPercent}%)`;
             document.getElementById('finalPrice').textContent = `$${finalPrice.toLocaleString()}`;
 
             // Show/hide minimum warning
