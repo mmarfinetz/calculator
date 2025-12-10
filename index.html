@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Easy Plumbing Price Calculator</title>
+    <title>Plumbing Job Quote Calculator</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -20,7 +20,7 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .calculator-container {
             background: white;
             border-radius: 20px;
@@ -29,43 +29,43 @@
             width: 100%;
             overflow: hidden;
         }
-        
+
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 30px;
             text-align: center;
         }
-        
+
         .header h1 {
             font-size: 28px;
             margin-bottom: 10px;
         }
-        
+
         .header p {
             opacity: 0.9;
             font-size: 14px;
         }
-        
+
         .calculator-body {
             padding: 30px;
         }
-        
+
         .input-section {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             background: #f8f9fa;
             padding: 20px;
             border-radius: 15px;
             border: 2px solid transparent;
             transition: all 0.3s ease;
         }
-        
+
         .input-section:hover {
             border-color: #667eea;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
         }
-        
+
         .step-number {
             display: inline-block;
             width: 30px;
@@ -78,7 +78,7 @@
             font-weight: bold;
             margin-right: 10px;
         }
-        
+
         .input-label {
             font-size: 18px;
             font-weight: 600;
@@ -87,7 +87,7 @@
             display: flex;
             align-items: center;
         }
-        
+
         .input-help {
             font-size: 12px;
             color: #666;
@@ -95,12 +95,12 @@
             margin-left: 40px;
             font-style: italic;
         }
-        
+
         .input-wrapper {
             position: relative;
             margin-left: 40px;
         }
-        
+
         .input-icon {
             position: absolute;
             left: 15px;
@@ -108,7 +108,7 @@
             transform: translateY(-50%);
             font-size: 20px;
         }
-        
+
         input[type="number"] {
             width: 100%;
             padding: 15px 15px 15px 45px;
@@ -118,13 +118,13 @@
             transition: all 0.3s ease;
             background: white;
         }
-        
+
         input[type="number"]:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
-        
+
         .quick-buttons {
             display: flex;
             gap: 10px;
@@ -132,7 +132,7 @@
             margin-left: 40px;
             flex-wrap: wrap;
         }
-        
+
         .quick-btn {
             padding: 8px 16px;
             background: #e8eaf6;
@@ -144,13 +144,175 @@
             color: #667eea;
             font-weight: 500;
         }
-        
+
         .quick-btn:hover {
             background: #667eea;
             color: white;
             transform: translateY(-2px);
         }
-        
+
+        .quick-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Time Type Toggle */
+        .time-type-toggle {
+            display: flex;
+            gap: 10px;
+            margin-left: 40px;
+            margin-bottom: 15px;
+        }
+
+        .time-type-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .time-type-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .time-type-btn:hover:not(.active) {
+            border-color: #667eea;
+        }
+
+        /* Pipe Calculator Styles */
+        .pipe-calculator {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .pipe-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .pipe-header:hover {
+            background: rgba(33, 150, 243, 0.1);
+        }
+
+        .pipe-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1976d2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pipe-toggle {
+            font-size: 20px;
+            transition: transform 0.3s ease;
+            color: #1976d2;
+        }
+
+        .pipe-toggle.open {
+            transform: rotate(180deg);
+        }
+
+        .pipe-content {
+            display: none;
+            padding: 20px;
+            border-top: 2px dashed #2196f3;
+            background: white;
+        }
+
+        .pipe-content.show {
+            display: block;
+        }
+
+        .pipe-input-group {
+            margin-bottom: 15px;
+        }
+
+        .pipe-input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .pipe-input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .pipe-input-group input:focus {
+            outline: none;
+            border-color: #2196f3;
+        }
+
+        .difficulty-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .difficulty-btn {
+            padding: 15px 10px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-btn:hover {
+            border-color: #2196f3;
+            transform: translateY(-2px);
+        }
+
+        .difficulty-btn .diff-name {
+            font-weight: 600;
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .difficulty-btn .diff-price {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .difficulty-btn.easy { border-left: 4px solid #4caf50; }
+        .difficulty-btn.standard { border-left: 4px solid #2196f3; }
+        .difficulty-btn.tight { border-left: 4px solid #ff9800; }
+        .difficulty-btn.hard { border-left: 4px solid #f44336; }
+
+        .pipe-note {
+            background: #fff3cd;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #856404;
+            margin-top: 15px;
+        }
+
+        /* Results Section */
         .results-section {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 25px;
@@ -158,7 +320,7 @@
             color: white;
             margin-top: 30px;
         }
-        
+
         .breakdown {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
@@ -167,11 +329,11 @@
             backdrop-filter: blur(10px);
             display: none;
         }
-        
+
         .breakdown.show {
             display: block;
         }
-        
+
         .show-breakdown-btn {
             background: rgba(255, 255, 255, 0.2);
             color: white;
@@ -187,19 +349,19 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        
+
         .show-breakdown-btn:hover {
             background: white;
             color: #667eea;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
         }
-        
+
         .show-breakdown-btn.active {
             background: white;
             color: #667eea;
         }
-        
+
         .breakdown-item {
             display: flex;
             justify-content: space-between;
@@ -207,23 +369,38 @@
             padding-bottom: 12px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
-        
+
         .breakdown-item:last-child {
             border-bottom: none;
             margin-bottom: 0;
             padding-bottom: 0;
         }
-        
+
         .breakdown-label {
             font-size: 14px;
             opacity: 0.9;
         }
-        
+
         .breakdown-value {
             font-size: 16px;
             font-weight: 600;
         }
-        
+
+        .profit-item {
+            background: rgba(76, 175, 80, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .profit-item .breakdown-label {
+            color: #a5d6a7;
+        }
+
+        .profit-item .breakdown-value {
+            color: #a5d6a7;
+        }
+
         .final-price {
             background: white;
             color: #333;
@@ -231,7 +408,7 @@
             border-radius: 10px;
             text-align: center;
         }
-        
+
         .final-price-label {
             font-size: 14px;
             color: #666;
@@ -239,14 +416,14 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        
+
         .final-price-amount {
             font-size: 48px;
             font-weight: bold;
             color: #667eea;
             line-height: 1;
         }
-        
+
         .warning {
             background: #fff3cd;
             border: 2px solid #ffc107;
@@ -258,11 +435,11 @@
             align-items: center;
             gap: 10px;
         }
-        
+
         .warning-icon {
             font-size: 24px;
         }
-        
+
         .reset-button {
             background: #dc3545;
             color: white;
@@ -276,103 +453,51 @@
             transition: all 0.3s ease;
             font-weight: 600;
         }
-        
+
         .reset-button:hover {
             background: #c82333;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
         }
-        
-        /* Slider Styles */
-        input[type="range"] {
-            -webkit-appearance: none;
-            appearance: none;
-            background: transparent;
-            cursor: pointer;
-        }
-        
-        input[type="range"]::-webkit-slider-track {
-            background: #e0e0e0;
-            height: 8px;
-            border-radius: 4px;
-        }
-        
-        input[type="range"]::-moz-range-track {
-            background: #e0e0e0;
-            height: 8px;
-            border-radius: 4px;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            background: #ffc107;
-            height: 24px;
-            width: 24px;
-            border-radius: 50%;
-            margin-top: -8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        input[type="range"]::-moz-range-thumb {
-            appearance: none;
-            background: #ffc107;
-            height: 24px;
-            width: 24px;
-            border-radius: 50%;
-            border: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        input[type="range"]:hover::-webkit-slider-thumb {
-            background: #ffb300;
-            transform: scale(1.1);
-        }
-        
-        input[type="range"]:hover::-moz-range-thumb {
-            background: #ffb300;
-            transform: scale(1.1);
-        }
-        
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 24px;
-            }
-            
-            .final-price-amount {
-                font-size: 36px;
-            }
-            
-            .quick-buttons {
-                margin-left: 0;
-            }
-            
-            .input-wrapper {
-                margin-left: 0;
-            }
-            
-            .input-help {
-                margin-left: 0;
-            }
-        }
-        
-        @media print {
-            body {
-                background: white;
-            }
 
-            .calculator-container {
-                box-shadow: none;
-            }
-
-            .reset-button {
-                display: none;
-            }
+        /* Quick Reference */
+        .reference {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            font-size: 13px;
+            color: #666;
         }
 
+        .reference h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reference-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 20px;
+        }
+
+        .reference-item {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .reference-item strong {
+            color: #667eea;
+        }
+
+        /* Setup Section */
         .setup-section {
             background: #e3f2fd;
-            padding: 20px;
+            padding: 15px 20px;
             border-radius: 15px;
             margin-bottom: 20px;
             border: 2px solid #2196f3;
@@ -387,7 +512,7 @@
         }
 
         .setup-title {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 600;
             color: #1976d2;
             display: flex;
@@ -396,8 +521,9 @@
         }
 
         .setup-toggle {
-            font-size: 24px;
+            font-size: 20px;
             transition: transform 0.3s ease;
+            color: #1976d2;
         }
 
         .setup-toggle.open {
@@ -417,33 +543,27 @@
 
         .setup-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
         }
 
         .setup-item {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
         }
 
         .setup-label {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: #1976d2;
             text-transform: uppercase;
         }
 
-        .setup-help {
-            font-size: 11px;
-            color: #666;
-            font-style: italic;
-        }
-
         .setup-input {
-            padding: 10px;
+            padding: 8px;
             border: 2px solid #90caf9;
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 14px;
             font-weight: 600;
         }
@@ -451,161 +571,208 @@
         .setup-input:focus {
             outline: none;
             border-color: #2196f3;
-            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
         }
 
-        .payment-toggle {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border: 2px solid #e0e0e0;
+        .calculated-rates {
+            margin-top: 15px;
+            padding: 12px;
+            background: #fff3cd;
+            border-radius: 8px;
+            border: 2px solid #ffc107;
         }
 
-        .payment-toggle input[type="checkbox"] {
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-        }
-
-        .payment-toggle label {
-            cursor: pointer;
+        .calculated-rates .rate-label {
             font-weight: 600;
-            color: #333;
+            color: #856404;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .calculated-rates .rate-values {
+            font-size: 14px;
+            color: #856404;
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .final-price-amount {
+                font-size: 36px;
+            }
+
+            .quick-buttons {
+                margin-left: 0;
+            }
+
+            .input-wrapper {
+                margin-left: 0;
+            }
+
+            .input-help {
+                margin-left: 0;
+            }
+
+            .time-type-toggle {
+                margin-left: 0;
+            }
+
+            .reference-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .calculator-container {
+                box-shadow: none;
+            }
+            .reset-button, .setup-section, .pipe-calculator {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
     <div class="calculator-container">
         <div class="header">
-            <h1>🔧 Easy Price Calculator</h1>
+            <h1>Plumbing Quote Calculator</h1>
             <p>Marfinetz Plumbing Company</p>
         </div>
 
         <div class="calculator-body">
-            <!-- Setup Section -->
+            <!-- Setup Section (Collapsible) -->
             <div class="setup-section">
                 <div class="setup-header" onclick="toggleSetup()">
                     <div class="setup-title">
-                        <span>⚙️</span>
-                        <span>Monthly Model Parameters</span>
+                        <span>Settings</span>
                     </div>
-                    <span class="setup-toggle" id="setupToggle">▼</span>
+                    <span class="setup-toggle" id="setupToggle">&#9660;</span>
                 </div>
                 <div class="setup-content" id="setupContent">
-                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">
-                        These parameters drive the base day-rate formula. Edit once per month, then quote all jobs using the calculated rates.
-                    </p>
                     <div class="setup-grid">
                         <div class="setup-item">
                             <label class="setup-label">F - Fixed Costs</label>
-                            <div class="setup-help">Monthly fixed costs ($)</div>
-                            <input type="number" id="setupF" class="setup-input" value="7739" step="1" min="0" onchange="saveSetup()">
+                            <input type="number" id="setupF" class="setup-input" value="7799" step="1" min="0" onchange="saveSetup()">
                         </div>
                         <div class="setup-item">
                             <label class="setup-label">P - Target Profit</label>
-                            <div class="setup-help">Monthly profit goal ($)</div>
-                            <input type="number" id="setupP" class="setup-input" value="5000" step="100" min="0" onchange="saveSetup()">
+                            <input type="number" id="setupP" class="setup-input" value="2000" step="100" min="0" onchange="saveSetup()">
                         </div>
                         <div class="setup-item">
                             <label class="setup-label">D - Billable Days</label>
-                            <div class="setup-help">Expected crew-days/month</div>
                             <input type="number" id="setupD" class="setup-input" value="20" step="1" min="1" onchange="saveSetup()">
                         </div>
                         <div class="setup-item">
-                            <label class="setup-label">S<sub>c</sub> - Safety Factor</label>
-                            <div class="setup-help">Capacity safety (0.0-1.0)</div>
-                            <input type="number" id="setupSc" class="setup-input" value="0.85" step="0.01" min="0.1" max="1.0" onchange="saveSetup()">
+                            <label class="setup-label">Sc - Capacity</label>
+                            <input type="number" id="setupSc" class="setup-input" value="0.90" step="0.01" min="0.1" max="1.0" onchange="saveSetup()">
                         </div>
                         <div class="setup-item">
-                            <label class="setup-label">C<sub>b</sub> - Overhead Cushion</label>
-                            <div class="setup-help">Base rate cushion (0.10 = 10%)</div>
+                            <label class="setup-label">Cb - Base Cushion</label>
                             <input type="number" id="setupCb" class="setup-input" value="0.10" step="0.01" min="0" onchange="saveSetup()">
                         </div>
                         <div class="setup-item">
-                            <label class="setup-label">C<sub>m</sub> - Materials Cushion</label>
-                            <div class="setup-help">Materials markup (0.15 = 15%)</div>
-                            <input type="number" id="setupCm" class="setup-input" value="0.15" step="0.01" min="0" onchange="saveSetup()">
+                            <label class="setup-label">Cm - Materials</label>
+                            <input type="number" id="setupCm" class="setup-input" value="0.10" step="0.01" min="0" onchange="saveSetup()">
                         </div>
                         <div class="setup-item">
                             <label class="setup-label">f - Card Fee</label>
-                            <div class="setup-help">Payment fee (0.03 = 3%)</div>
                             <input type="number" id="setupF_fee" class="setup-input" value="0.03" step="0.001" min="0" onchange="saveSetup()">
                         </div>
                         <div class="setup-item">
-                            <label class="setup-label">H<sub>day</sub> - Hours/Day</label>
-                            <div class="setup-help">Billable hours per day</div>
-                            <input type="number" id="setupHday" class="setup-input" value="7.5" step="0.5" min="1" onchange="saveSetup()">
-                        </div>
-                        <div class="setup-item">
-                            <label class="setup-label">Crew Size</label>
-                            <div class="setup-help">Default crew size</div>
-                            <input type="number" id="setupCrewSize" class="setup-input" value="2" step="1" min="1" onchange="saveSetup()">
+                            <label class="setup-label">Hday - Hours/Day</label>
+                            <input type="number" id="setupHday" class="setup-input" value="8" step="0.5" min="1" onchange="saveSetup()">
                         </div>
                     </div>
-                    <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 8px; border: 2px solid #ffc107;">
-                        <div style="font-weight: 600; margin-bottom: 5px; color: #856404;">📊 Calculated Rates:</div>
-                        <div style="font-size: 14px; color: #856404;">
-                            <strong>B<sub>day</sub></strong> (base day-rate) = <span id="calcBday">$0</span> |
-                            <strong>B<sub>person-hour</sub></strong> = <span id="calcBpersonHour">$0</span>
+                    <div class="calculated-rates">
+                        <div class="rate-label">Calculated Rates:</div>
+                        <div class="rate-values">
+                            B<sub>day</sub> = <span id="calcBday">$598.83</span> |
+                            B<sub>hour</sub> = <span id="calcBhour">$74.85</span> |
+                            Posted: <span id="calcPosted">$79/hr</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Hours Input -->
+
+            <!-- Per-Foot Pipe Calculator (Collapsible) -->
+            <div class="pipe-calculator">
+                <div class="pipe-header" onclick="togglePipeCalc()">
+                    <div class="pipe-title">
+                        <span>Per-Foot Pipe Pricing</span>
+                    </div>
+                    <span class="pipe-toggle" id="pipeToggle">&#9660;</span>
+                </div>
+                <div class="pipe-content" id="pipeContent">
+                    <div class="pipe-input-group">
+                        <label for="pipeFeet">Pipe Length (feet):</label>
+                        <input type="number" id="pipeFeet" step="1" min="0" placeholder="Enter feet of pipe">
+                    </div>
+                    <div class="pipe-input-group">
+                        <label>Difficulty Level:</label>
+                        <div class="difficulty-grid">
+                            <button class="difficulty-btn easy" onclick="calculatePipeJob(0.25, 'Easy')">
+                                <span class="diff-name">Easy</span>
+                                <span class="diff-price">~$33/ft</span>
+                            </button>
+                            <button class="difficulty-btn standard" onclick="calculatePipeJob(0.50, 'Standard')">
+                                <span class="diff-name">Standard</span>
+                                <span class="diff-price">~$52/ft</span>
+                            </button>
+                            <button class="difficulty-btn tight" onclick="calculatePipeJob(0.75, 'Tight')">
+                                <span class="diff-name">Tight</span>
+                                <span class="diff-price">~$72/ft</span>
+                            </button>
+                            <button class="difficulty-btn hard" onclick="calculatePipeJob(1.0, 'Hard')">
+                                <span class="diff-name">Hard</span>
+                                <span class="diff-price">~$91/ft</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="pipe-note">
+                        <strong>Note:</strong> Per-foot pricing includes $319 minimum base + materials (~$12/ft for 2" drain pipe). Click a difficulty to auto-fill the calculator below.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Time Input -->
             <div class="input-section">
                 <div class="input-label">
                     <span class="step-number">1</span>
-                    How many hours will the job take?
+                    Time for the job
                 </div>
-                <div class="input-help">Include travel time and setup</div>
+                <div class="input-help">Select input type, then enter time</div>
+
+                <div class="time-type-toggle">
+                    <button class="time-type-btn active" id="hoursBtn" onclick="setTimeType('hours')">Crew Hours</button>
+                    <button class="time-type-btn" id="daysBtn" onclick="setTimeType('days')">Crew Days</button>
+                </div>
+
                 <div class="input-wrapper">
-                    <span class="input-icon">⏱️</span>
-                    <input type="number" id="hours" placeholder="0" step="0.5" min="0">
+                    <span class="input-icon" id="timeIcon">&#9201;</span>
+                    <input type="number" id="time" placeholder="0" step="0.5" min="0">
                 </div>
+
                 <div class="quick-buttons">
-                    <button class="quick-btn" onclick="setHours(0.5)">30 min</button>
-                    <button class="quick-btn" onclick="setHours(1)">1 hour</button>
-                    <button class="quick-btn" onclick="setHours(2)">2 hours</button>
-                    <button class="quick-btn" onclick="setHours(4)">Half day</button>
-                    <button class="quick-btn" onclick="setHours(8)">Full day</button>
-                </div>
-                <!-- Multi-day toggle -->
-                <div style="margin-top: 15px; margin-left: 40px;">
-                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                        <input type="checkbox" id="multiDay" onchange="toggleMultiDay()" style="width: 20px; height: 20px;">
-                        <span style="font-weight: 600; color: #667eea;">📅 This is a multi-day job</span>
-                    </label>
-                </div>
-                <div id="multiDayInput" style="display: none; margin-top: 15px; margin-left: 40px; padding: 15px; background: #e8eaf6; border-radius: 10px;">
-                    <div style="margin-bottom: 10px;">
-                        <label style="font-size: 14px; color: #666; display: block; margin-bottom: 5px;">Number of crew members:</label>
-                        <input type="number" id="crewSize" placeholder="1" value="1" min="1" step="1" style="width: 100%; padding: 10px; font-size: 16px; border: 2px solid #e0e0e0; border-radius: 5px;">
-                    </div>
-                    <div>
-                        <label style="font-size: 14px; color: #666; display: block; margin-bottom: 5px;">Number of days:</label>
-                        <input type="number" id="days" placeholder="1" value="1" min="1" step="0.5" style="width: 100%; padding: 10px; font-size: 16px; border: 2px solid #e0e0e0; border-radius: 5px;">
-                    </div>
-                    <div class="quick-buttons" style="margin-top: 10px;">
-                        <button class="quick-btn" onclick="setMultiDay(1, 2)">1 person, 2 days</button>
-                        <button class="quick-btn" onclick="setMultiDay(2, 2)">2 crew, 2 days</button>
-                        <button class="quick-btn" onclick="setMultiDay(2, 3)">2 crew, 3 days</button>
-                    </div>
+                    <button class="quick-btn" onclick="setQuickTime(0.5)">1/2 Day</button>
+                    <button class="quick-btn" onclick="setQuickTime(1)">Full Day</button>
+                    <button class="quick-btn" onclick="setQuickTime(1.5)">1.5 Days</button>
+                    <button class="quick-btn" onclick="setQuickTime(2)">2 Days</button>
                 </div>
             </div>
-            
+
             <!-- Materials Input -->
             <div class="input-section">
                 <div class="input-label">
                     <span class="step-number">2</span>
-                    Cost of materials/parts?
+                    Cost of materials/parts
                 </div>
-                <div class="input-help">What you paid for parts (we'll add cushion automatically)</div>
+                <div class="input-help">Your cost - 10% cushion added automatically</div>
                 <div class="input-wrapper">
-                    <span class="input-icon">💵</span>
+                    <span class="input-icon">$</span>
                     <input type="number" id="materials" placeholder="0" step="10" min="0">
                 </div>
                 <div class="quick-buttons">
@@ -617,83 +784,110 @@
                 </div>
             </div>
 
-            <!-- Payment Method -->
-            <div class="input-section">
-                <div class="input-label">
-                    <span class="step-number">3</span>
-                    Payment Method
-                </div>
-                <div class="payment-toggle">
-                    <input type="checkbox" id="payByCard" onchange="calculatePrice()">
-                    <label for="payByCard">💳 Customer paying by card (adds processing fee)</label>
-                </div>
-            </div>
-            
             <!-- Results -->
             <div class="results-section" id="results" style="display: none;">
                 <button class="show-breakdown-btn" id="breakdownBtn" onclick="toggleBreakdown()">
-                    📊 Show Detailed Breakdown
+                    Show Detailed Breakdown
                 </button>
-                
+
                 <div class="breakdown" id="breakdown">
                     <div class="breakdown-item">
                         <span class="breakdown-label">Job effort</span>
-                        <span class="breakdown-value" id="jobEffort">—</span>
+                        <span class="breakdown-value" id="jobEffort">-</span>
                     </div>
                     <div class="breakdown-item">
-                        <span class="breakdown-label">Labor (base rate × effort)</span>
+                        <span class="breakdown-label">Labor (time x base rate)</span>
                         <span class="breakdown-value" id="laborCost">$0</span>
                     </div>
                     <div class="breakdown-item">
-                        <span class="breakdown-label">Materials (cost + <span id="cmPercent">15</span>% cushion)</span>
+                        <span class="breakdown-label">Materials (cost + 10%)</span>
                         <span class="breakdown-value" id="materialsCost">$0</span>
                     </div>
                     <div class="breakdown-item">
-                        <span class="breakdown-label">Subtotal (before fees)</span>
+                        <span class="breakdown-label">Subtotal (before fee)</span>
                         <span class="breakdown-value" id="subtotalAmount">$0</span>
                     </div>
-                    <div class="breakdown-item" id="cardFeeRow" style="display: none;">
-                        <span class="breakdown-label">Card processing fee (<span id="feePercent">3</span>%)</span>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Card processing (3%)</span>
                         <span class="breakdown-value" id="cardFeeAmount">$0</span>
                     </div>
+                    <div class="breakdown-item profit-item">
+                        <span class="breakdown-label">Expected Profit</span>
+                        <span class="breakdown-value" id="profitAmount">$0</span>
+                    </div>
                 </div>
-                
+
                 <div class="final-price">
                     <div class="final-price-label">Quote This Price</div>
                     <div class="final-price-amount" id="finalPrice">$0</div>
                 </div>
-                
+
                 <div class="warning" id="minimumWarning">
-                    <span class="warning-icon">⚠️</span>
+                    <span class="warning-icon">&#9888;</span>
                     <div>
-                        <strong>Price adjusted to $250 minimum</strong><br>
-                        <small>All jobs must be at least $250 to cover business costs</small>
+                        <strong>Minimum service charge applied ($319)</strong><br>
+                        <small>Covers up to 0.5 day / 4 crew-hours</small>
                     </div>
                 </div>
             </div>
-            
+
             <button class="reset-button" onclick="resetCalculator()">Clear & Start Over</button>
+
+            <!-- Quick Reference -->
+            <div class="reference">
+                <h3>Quick Reference</h3>
+                <div class="reference-grid">
+                    <div class="reference-item">
+                        <span>Minimum:</span>
+                        <strong>$319</strong>
+                    </div>
+                    <div class="reference-item">
+                        <span>Hourly:</span>
+                        <strong>$79/crew-hr</strong>
+                    </div>
+                    <div class="reference-item">
+                        <span>Materials:</span>
+                        <strong>Cost x 1.10</strong>
+                    </div>
+                    <div class="reference-item">
+                        <span>Card fee:</span>
+                        <strong>3% (included)</strong>
+                    </div>
+                    <div class="reference-item">
+                        <span>Pipe (easy):</span>
+                        <strong>~$33/ft</strong>
+                    </div>
+                    <div class="reference-item">
+                        <span>Pipe (hard):</span>
+                        <strong>~$91/ft</strong>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    
-    <script>
-        // Whiteboard pricing model implementation
-        const MINIMUM_CHARGE = 250;
 
-        // Load setup from localStorage or use defaults
+    <script>
+        // ============================================
+        // PRICING MODEL - UPDATED TO MATCH SPEC
+        // ============================================
+        const MINIMUM_CHARGE = 319;  // Minimum service call
+        const MINIMUM_DAYS = 0.5;    // 0.5 day = 4 crew-hours
+
+        let timeType = 'hours';  // 'hours' or 'days'
+
+        // Load setup from localStorage or use correct defaults
         function loadSetup() {
             const saved = localStorage.getItem('pricingModelSetup');
             if (saved) {
                 const params = JSON.parse(saved);
-                document.getElementById('setupF').value = params.F;
-                document.getElementById('setupP').value = params.P;
-                document.getElementById('setupD').value = params.D;
-                document.getElementById('setupSc').value = params.Sc;
-                document.getElementById('setupCb').value = params.Cb;
-                document.getElementById('setupCm').value = params.Cm;
-                document.getElementById('setupF_fee').value = params.f;
-                document.getElementById('setupHday').value = params.Hday;
-                document.getElementById('setupCrewSize').value = params.crewSize;
+                document.getElementById('setupF').value = params.F ?? 7799;
+                document.getElementById('setupP').value = params.P ?? 2000;
+                document.getElementById('setupD').value = params.D ?? 20;
+                document.getElementById('setupSc').value = params.Sc ?? 0.90;
+                document.getElementById('setupCb').value = params.Cb ?? 0.10;
+                document.getElementById('setupCm').value = params.Cm ?? 0.10;
+                document.getElementById('setupF_fee').value = params.f ?? 0.03;
+                document.getElementById('setupHday').value = params.Hday ?? 8;
             }
             updateCalculatedRates();
         }
@@ -709,76 +903,140 @@
         // Get current setup parameters
         function getSetupParams() {
             return {
-                F: parseFloat(document.getElementById('setupF').value) || 7739,
-                P: parseFloat(document.getElementById('setupP').value) || 5000,
+                F: parseFloat(document.getElementById('setupF').value) || 7799,
+                P: parseFloat(document.getElementById('setupP').value) || 2000,
                 D: parseFloat(document.getElementById('setupD').value) || 20,
-                Sc: parseFloat(document.getElementById('setupSc').value) || 0.85,
+                Sc: parseFloat(document.getElementById('setupSc').value) || 0.90,
                 Cb: parseFloat(document.getElementById('setupCb').value) || 0.10,
-                Cm: parseFloat(document.getElementById('setupCm').value) || 0.15,
+                Cm: parseFloat(document.getElementById('setupCm').value) || 0.10,
                 f: parseFloat(document.getElementById('setupF_fee').value) || 0.03,
-                Hday: parseFloat(document.getElementById('setupHday').value) || 7.5,
-                crewSize: parseFloat(document.getElementById('setupCrewSize').value) || 2
+                Hday: parseFloat(document.getElementById('setupHday').value) || 8
             };
         }
 
-        // Calculate and display B_day and B_personHour
+        // Calculate B_day and B_hour
+        function calculateRates(params) {
+            // B_day = (1 + C_b)(F + P) / (S_c * D)
+            const Bday = (1 + params.Cb) * (params.F + params.P) / (params.Sc * params.D);
+            const Bhour = Bday / params.Hday;
+            return { Bday, Bhour };
+        }
+
+        // Update displayed calculated rates
         function updateCalculatedRates() {
             const params = getSetupParams();
-            const Bday = (1 + params.Cb) * (params.F + params.P) / (params.Sc * params.D);
-            const BpersonHour = Bday / (params.Hday * params.crewSize);
+            const { Bday, Bhour } = calculateRates(params);
+
+            // Posted hourly rate (with fee baked in, rounded up to nice number)
+            const postedHourly = Math.ceil(Bhour / (1 - params.f));
 
             document.getElementById('calcBday').textContent = `$${Bday.toFixed(2)}`;
-            document.getElementById('calcBpersonHour').textContent = `$${BpersonHour.toFixed(2)}`;
+            document.getElementById('calcBhour').textContent = `$${Bhour.toFixed(2)}`;
+            document.getElementById('calcPosted').textContent = `$${postedHourly}/hr`;
         }
 
         // Toggle setup section
         function toggleSetup() {
             const content = document.getElementById('setupContent');
             const toggle = document.getElementById('setupToggle');
-
-            if (content.classList.contains('show')) {
-                content.classList.remove('show');
-                toggle.classList.remove('open');
-            } else {
-                content.classList.add('show');
-                toggle.classList.add('open');
-            }
+            content.classList.toggle('show');
+            toggle.classList.toggle('open');
         }
 
-        // Toggle multi-day input
-        function toggleMultiDay() {
-            const isChecked = document.getElementById('multiDay').checked;
-            const multiDayInput = document.getElementById('multiDayInput');
-            const hoursInput = document.getElementById('hours');
-
-            if (isChecked) {
-                multiDayInput.style.display = 'block';
-                hoursInput.disabled = true;
-                hoursInput.style.opacity = '0.5';
-                calculateMultiDayHours();
-            } else {
-                multiDayInput.style.display = 'none';
-                hoursInput.disabled = false;
-                hoursInput.style.opacity = '1';
-                calculatePrice();
-            }
+        // Toggle pipe calculator
+        function togglePipeCalc() {
+            const content = document.getElementById('pipeContent');
+            const toggle = document.getElementById('pipeToggle');
+            content.classList.toggle('show');
+            toggle.classList.toggle('open');
         }
 
-        // Calculate hours for multi-day jobs
-        function calculateMultiDayHours() {
-            const params = getSetupParams();
-            const crewSize = parseFloat(document.getElementById('crewSize').value) || 1;
-            const days = parseFloat(document.getElementById('days').value) || 1;
-            const totalHours = crewSize * days * params.Hday;
-            document.getElementById('hours').value = totalHours;
+        // Set time input type
+        function setTimeType(type) {
+            timeType = type;
+            const hoursBtn = document.getElementById('hoursBtn');
+            const daysBtn = document.getElementById('daysBtn');
+            const timeInput = document.getElementById('time');
+
+            if (type === 'hours') {
+                hoursBtn.classList.add('active');
+                daysBtn.classList.remove('active');
+                timeInput.placeholder = 'Crew hours (e.g., 4)';
+                timeInput.step = '0.5';
+            } else {
+                hoursBtn.classList.remove('active');
+                daysBtn.classList.add('active');
+                timeInput.placeholder = 'Crew days (e.g., 0.5)';
+                timeInput.step = '0.125';
+            }
             calculatePrice();
         }
 
-        // Set multi-day preset
-        function setMultiDay(crew, days) {
-            document.getElementById('crewSize').value = crew;
-            document.getElementById('days').value = days;
-            calculateMultiDayHours();
+        // Set quick time (always in days, converts based on mode)
+        function setQuickTime(days) {
+            const params = getSetupParams();
+            const timeInput = document.getElementById('time');
+
+            if (timeType === 'hours') {
+                timeInput.value = days * params.Hday;
+            } else {
+                timeInput.value = days;
+            }
+
+            // Visual feedback
+            document.querySelectorAll('.quick-buttons .quick-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            setTimeout(() => event.target.classList.remove('active'), 300);
+
+            calculatePrice();
+        }
+
+        // Quick set materials
+        function setMaterials(value) {
+            document.getElementById('materials').value = value;
+            calculatePrice();
+        }
+
+        // Calculate pipe job and populate fields
+        function calculatePipeJob(hoursPerFoot, difficultyName) {
+            const feet = parseFloat(document.getElementById('pipeFeet').value) || 0;
+            if (feet === 0) {
+                alert('Please enter the pipe length in feet');
+                return;
+            }
+
+            const params = getSetupParams();
+            const totalHours = feet * hoursPerFoot;
+            const totalDays = totalHours / params.Hday;
+            const materialsPerFoot = 12; // ~$12/ft for 2" PVC
+            const totalMaterials = feet * materialsPerFoot;
+
+            // Ensure minimum
+            const billableDays = Math.max(totalDays, MINIMUM_DAYS);
+
+            // Set values based on current time type
+            if (timeType === 'hours') {
+                document.getElementById('time').value = Math.max(4, totalHours);
+            } else {
+                document.getElementById('time').value = billableDays;
+            }
+            document.getElementById('materials').value = totalMaterials;
+
+            calculatePrice();
+
+            // Scroll to results
+            setTimeout(() => {
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+
+        // Round UP to next number ending in 9
+        function roundToNext9(price) {
+            const ceiled = Math.ceil(price);
+            const lastDigit = ceiled % 10;
+            return ceiled + (9 - lastDigit);
         }
 
         // Toggle breakdown visibility
@@ -789,100 +1047,81 @@
             if (breakdown.classList.contains('show')) {
                 breakdown.classList.remove('show');
                 button.classList.remove('active');
-                button.innerHTML = '📊 Show Detailed Breakdown';
+                button.textContent = 'Show Detailed Breakdown';
             } else {
                 breakdown.classList.add('show');
                 button.classList.add('active');
-                button.innerHTML = '📊 Hide Detailed Breakdown';
+                button.textContent = 'Hide Detailed Breakdown';
             }
         }
 
-        // Quick set functions
-        function setHours(value) {
-            document.getElementById('hours').value = value;
-            calculatePrice();
-        }
-
-        function setMaterials(value) {
-            document.getElementById('materials').value = value;
-            calculatePrice();
-        }
-
-        // Main calculation function using whiteboard model
+        // ============================================
+        // MAIN CALCULATION FUNCTION
+        // ============================================
         function calculatePrice() {
-            const hours = parseFloat(document.getElementById('hours').value) || 0;
+            const timeInput = parseFloat(document.getElementById('time').value) || 0;
             const materialsCost = parseFloat(document.getElementById('materials').value) || 0;
-            const payByCard = document.getElementById('payByCard').checked;
 
-            if (hours === 0 && materialsCost === 0) {
+            if (timeInput === 0 && materialsCost === 0) {
                 document.getElementById('results').style.display = 'none';
                 return;
             }
 
             const params = getSetupParams();
+            const { Bday, Bhour } = calculateRates(params);
 
-            // Calculate base rates using whiteboard formula
-            // B_day = (1 + C_b)(F + P) / (S_c * D)
-            const Bday = (1 + params.Cb) * (params.F + params.P) / (params.Sc * params.D);
-            const BpersonHour = Bday / (params.Hday * params.crewSize);
+            // Convert input to days
+            let days = timeType === 'hours' ? timeInput / params.Hday : timeInput;
+            let displayHours = timeType === 'hours' ? timeInput : timeInput * params.Hday;
 
-            // Determine if we're using multi-day mode
-            const isMultiDay = document.getElementById('multiDay').checked;
-            let labor, jobEffortText;
+            // Apply minimum billing (0.5 day = 4 crew-hours)
+            const billableDays = Math.max(days, MINIMUM_DAYS);
+            const minimumApplied = days > 0 && days < MINIMUM_DAYS;
 
-            if (isMultiDay) {
-                const crewSize = parseFloat(document.getElementById('crewSize').value) || 1;
-                const days = parseFloat(document.getElementById('days').value) || 1;
-                const crewDays = crewSize * days;
-                labor = crewDays * Bday;
-                jobEffortText = `${crewSize} × ${days} days = ${crewDays.toFixed(1)} crew-days`;
-            } else {
-                // Convert hours to person-hours based on setup crew size
-                const personHours = hours;
-                labor = personHours * BpersonHour;
-                jobEffortText = `${hours} person-hours`;
-            }
+            // Calculate components
+            // Labor = B_day * d_j
+            const laborCost = billableDays * Bday;
 
-            // Materials with cushion: (1 + C_m) * M
+            // Materials = (1 + C_m) * M
             const materialsWithCushion = (1 + params.Cm) * materialsCost;
 
-            // Subtotal
-            const subtotal = labor + materialsWithCushion;
+            // Subtotal (before fee)
+            const subtotal = laborCost + materialsWithCushion;
 
-            // Apply card fee if selected: total = subtotal / (1 - f)
-            let finalPrice = payByCard ? subtotal / (1 - params.f) : subtotal;
-            const cardFee = payByCard ? (finalPrice - subtotal) : 0;
+            // ALWAYS apply card fee: Price = subtotal / (1 - f)
+            const rawTotal = subtotal / (1 - params.f);
+            const cardFee = rawTotal - subtotal;
 
-            // Apply minimum charge
-            const belowMinimum = finalPrice < MINIMUM_CHARGE && finalPrice > 0;
-            if (belowMinimum) {
+            // Round UP to next $x9
+            let finalPrice = roundToNext9(rawTotal);
+
+            // Ensure minimum charge
+            if (finalPrice < MINIMUM_CHARGE && (days > 0 || materialsCost > 0)) {
                 finalPrice = MINIMUM_CHARGE;
             }
 
-            // Round to nearest $10
-            finalPrice = Math.round(finalPrice / 10) * 10;
+            // Calculate expected profit for this job
+            // Profit per day = P / (Sc * D)
+            const profitPerDay = params.P / (params.Sc * params.D);
+            const jobProfit = billableDays * profitPerDay;
+            const profitPercent = (jobProfit / finalPrice * 100).toFixed(1);
 
             // Update display
+            const jobEffortText = timeType === 'hours'
+                ? `${displayHours} hrs = ${billableDays.toFixed(2)} days`
+                : `${billableDays.toFixed(2)} days`;
+
             document.getElementById('jobEffort').textContent = jobEffortText;
-            document.getElementById('laborCost').textContent = `$${labor.toFixed(0)}`;
+            document.getElementById('laborCost').textContent = `$${laborCost.toFixed(0)}`;
             document.getElementById('materialsCost').textContent = `$${materialsWithCushion.toFixed(0)}`;
-            document.getElementById('cmPercent').textContent = (params.Cm * 100).toFixed(0);
             document.getElementById('subtotalAmount').textContent = `$${subtotal.toFixed(0)}`;
-
-            // Card fee row
-            const cardFeeRow = document.getElementById('cardFeeRow');
-            if (payByCard) {
-                cardFeeRow.style.display = 'flex';
-                document.getElementById('cardFeeAmount').textContent = `$${cardFee.toFixed(0)}`;
-                document.getElementById('feePercent').textContent = (params.f * 100).toFixed(1);
-            } else {
-                cardFeeRow.style.display = 'none';
-            }
-
-            document.getElementById('finalPrice').textContent = `$${finalPrice.toFixed(0)}`;
+            document.getElementById('cardFeeAmount').textContent = `$${cardFee.toFixed(0)}`;
+            document.getElementById('profitAmount').textContent = `$${jobProfit.toFixed(0)} (${profitPercent}%)`;
+            document.getElementById('finalPrice').textContent = `$${finalPrice.toLocaleString()}`;
 
             // Show/hide minimum warning
-            document.getElementById('minimumWarning').style.display = belowMinimum ? 'flex' : 'none';
+            document.getElementById('minimumWarning').style.display =
+                (minimumApplied || finalPrice === MINIMUM_CHARGE) ? 'flex' : 'none';
 
             // Show results
             document.getElementById('results').style.display = 'block';
@@ -890,40 +1129,41 @@
 
         // Reset function
         function resetCalculator() {
-            document.getElementById('hours').value = '';
+            document.getElementById('time').value = '';
             document.getElementById('materials').value = '';
-            document.getElementById('payByCard').checked = false;
+            document.getElementById('pipeFeet').value = '';
             document.getElementById('results').style.display = 'none';
-            // Reset breakdown visibility
             document.getElementById('breakdown').classList.remove('show');
             document.getElementById('breakdownBtn').classList.remove('active');
-            document.getElementById('breakdownBtn').innerHTML = '📊 Show Detailed Breakdown';
-            // Reset multi-day
-            document.getElementById('multiDay').checked = false;
-            document.getElementById('multiDayInput').style.display = 'none';
-            document.getElementById('hours').disabled = false;
-            document.getElementById('hours').style.opacity = '1';
-            document.getElementById('crewSize').value = 1;
-            document.getElementById('days').value = 1;
+            document.getElementById('breakdownBtn').textContent = 'Show Detailed Breakdown';
         }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadSetup();
 
-            // Add event listeners
-            document.getElementById('hours').addEventListener('input', calculatePrice);
+            // Add event listeners for real-time calculation
+            document.getElementById('time').addEventListener('input', calculatePrice);
             document.getElementById('materials').addEventListener('input', calculatePrice);
-            document.getElementById('crewSize').addEventListener('input', calculateMultiDayHours);
-            document.getElementById('days').addEventListener('input', calculateMultiDayHours);
 
             // Prevent negative numbers
-            document.getElementById('hours').addEventListener('change', function() {
+            document.getElementById('time').addEventListener('change', function() {
+                if (this.value < 0) this.value = 0;
+            });
+            document.getElementById('materials').addEventListener('change', function() {
+                if (this.value < 0) this.value = 0;
+            });
+            document.getElementById('pipeFeet').addEventListener('change', function() {
                 if (this.value < 0) this.value = 0;
             });
 
-            document.getElementById('materials').addEventListener('change', function() {
-                if (this.value < 0) this.value = 0;
+            // Enter key support
+            document.querySelectorAll('input[type="number"]').forEach(input => {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        calculatePrice();
+                    }
+                });
             });
         });
     </script>
